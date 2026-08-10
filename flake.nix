@@ -4,18 +4,14 @@
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nvf.url = "github:notashelf/nvf"; # Neovim configuration with Nix
   };
 
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
-        # To import an internal flake module: ./other.nix
-        # To import an external flake module:
-        #   1. Add foo to inputs
-        #   2. Add foo as a parameter to the outputs function
-        #   3. Add here: foo.flakeModule
-
+        ./obsidian_headless.nix
       ];
       systems = [
         "x86_64-linux"
@@ -33,9 +29,31 @@
           ...
         }:
         {
-          packages.default = pkgs.neovim;
+          packages.myNeovim =
+            (inputs.nvf.lib.neovimConfiguration {
+              inherit pkgs;
+              modules = [
+                ./configuration.nix
+                ./keymaps.nix
+                ./obsidian.nix
+              ];
+            }).neovim;
+          packages.default = self'.packages.myNeovim;
         };
       flake = {
+        nixosModules.default =
+          { moduleWithSystem, ... }:
+          (
+            perSystem@{ packages, ... }:
+            nixos@{ ... }:
+            {
+              environment.systemPackages = [
+                perSystem.packages.neovim
+              ];
+              programs.neovim.enable = true;
+              programs.neovim.defaultEditor = true;
+            }
+          );
       };
     };
 }
