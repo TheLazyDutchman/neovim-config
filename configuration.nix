@@ -65,6 +65,21 @@
       enable = true;
       formatOnSave = true;
       inlayHints.enable = true;
+
+      servers = {
+        rust-analyzer = {
+          settings.rust-analyzer = {
+            assist = {
+              emitMustUse = true;
+              preferSelf = true;
+            };
+            checkOnSave = true;
+            check = {
+              command = "clippy";
+            };
+          };
+        };
+      };
     };
 
     treesitter = {
