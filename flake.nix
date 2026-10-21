@@ -4,8 +4,14 @@
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nvf.url = "github:notashelf/nvf"; # Neovim configuration with Nix
-    nanamiiiii.url = "github:Nanamiiiii/nur";
+    nvf = {
+      url = "github:notashelf/nvf";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nanamiiiii = {
+      url = "github:Nanamiiiii/nur";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
