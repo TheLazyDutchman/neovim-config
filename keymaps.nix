@@ -1,5 +1,12 @@
-{ pkgs, inputs, ... }: {
+{ ... }: {
   vim.keymaps = [
+    {
+      key = "<Esc>";
+      desc = "Remove search highlighting";
+      mode = "n";
+      silent = true;
+      action = ":nohlsearch<cr>";
+    }
     {
       key = "<leader>ff";
       desc = "File picker";

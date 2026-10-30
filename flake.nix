@@ -33,19 +33,37 @@
             inputs',
             pkgs,
             system,
+            lib,
             ...
           }:
           {
-            packages.myNeovim =
-              (inputs.nvf.lib.neovimConfiguration {
-                inherit pkgs;
-                modules = [
-                  ./configuration.nix
-                  ./keymaps.nix
-                  ./obsidian.nix
-                ];
-              }).neovim;
-            packages.default = self'.packages.myNeovim;
+            options.rust = with lib; {
+              enable = mkOption {
+                default = true;
+                example = false;
+                description = "Wether to enable The Rust programming language";
+                type = types.bool;
+              };
+
+              rust-analyzer.package = mkOption {
+                default = null;
+                description = "Which package to use for the rust-analyzer language server\n\tIf 'null', uses the default package from 'nvf'";
+                type = types.nullOr types.package;
+              };
+            };
+
+            config = {
+              packages.myNeovim =
+                (inputs.nvf.lib.neovimConfiguration {
+                  inherit pkgs;
+                  modules = [
+                    ./configuration.nix
+                    ./keymaps.nix
+                    ./obsidian.nix
+                  ];
+                }).neovim;
+              packages.default = self'.packages.myNeovim;
+            };
           };
         flake = {
           nixosModules.default = moduleWithSystem (
