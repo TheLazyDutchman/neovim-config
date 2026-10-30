@@ -1,7 +1,4 @@
 {
-  self,
-  pkgs,
-  lib,
   ...
 }:
 {
@@ -47,6 +44,10 @@
       };
     };
 
+    filetree.neo-tree = {
+      enable = true;
+    };
+
     statusline.lualine.enable = true;
     autocomplete.nvim-cmp.enable = true;
 
@@ -83,6 +84,10 @@
             };
           };
         };
+      };
+
+      lspsaga = {
+        enable = true;
       };
     };
 
