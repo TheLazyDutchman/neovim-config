@@ -1,4 +1,6 @@
 {
+  lib,
+  config,
   ...
 }:
 {
@@ -59,7 +61,7 @@
         format.type = [ "nixfmt" ];
       };
 
-      rust.enable = true;
+      rust.enable = config.rust.enable;
       python = {
         enable = true;
         format.type = [ "ruff" ];
@@ -74,6 +76,7 @@
       servers = {
         rust-analyzer = {
           settings.rust-analyzer = {
+            cmd = lib.mapNullable lib.getExe config.rust.rust-analyzer.package;
             assist = {
               emitMustUse = true;
               preferSelf = true;

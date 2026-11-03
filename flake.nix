@@ -45,10 +45,10 @@
                 type = types.bool;
               };
 
-              rust-analyzer.package = mkOption {
+              rust-analyzer.package = mkPackageOption pkgs "rust-analyzer" {
+                extraDescription = "Optional override for the rust language server";
+                nullable = true;
                 default = null;
-                description = "Which package to use for the rust-analyzer language server\n\tIf 'null', uses the default package from 'nvf'";
-                type = types.nullOr types.package;
               };
             };
 
@@ -57,7 +57,7 @@
                 (inputs.nvf.lib.neovimConfiguration {
                   inherit pkgs;
                   modules = [
-                    ./configuration.nix
+                    (import ./configuration.nix { inherit config lib; })
                     ./keymaps.nix
                     ./obsidian.nix
                   ];
